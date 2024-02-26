@@ -35,9 +35,7 @@ func New() (m *Meter) {
 		},
 	}
 
-	reg := prometheus.NewRegistry()
-
-	reg.MustRegister(
+	prometheus.MustRegister(
 		m.uptime,
 		m.ssh.rekeyed,
 		m.ssh.renewed,
@@ -49,8 +47,8 @@ func New() (m *Meter) {
 		m.kms.errors,
 	)
 
-	h := promhttp.HandlerFor(reg, promhttp.HandlerOpts{
-		Registry:            reg,
+	h := promhttp.HandlerFor(prometheus.DefaultGatherer, promhttp.HandlerOpts{
+		Registry:            prometheus.DefaultRegisterer,
 		Timeout:             5 * time.Second,
 		MaxRequestsInFlight: 10,
 	})

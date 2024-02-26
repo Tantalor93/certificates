@@ -413,18 +413,18 @@ func deviceAttest01Validate(ctx context.Context, ch *Challenge, db DB, jwk *jose
 			}
 		}
 
-		// Validate Apple's ClientIdentifier (Identifier.Value) with device
-		// identifiers.
-		//
-		// Note: We might want to use an external service for this.
-		if data.UDID != ch.Value && data.SerialNumber != ch.Value {
-			subproblem := NewSubproblemWithIdentifier(
-				ErrorRejectedIdentifierType,
-				Identifier{Type: "permanent-identifier", Value: ch.Value},
-				"challenge identifier %q doesn't match any of the attested hardware identifiers %q", ch.Value, []string{data.UDID, data.SerialNumber},
-			)
-			return storeError(ctx, db, ch, true, NewDetailedError(ErrorBadAttestationStatementType, "permanent identifier does not match").AddSubproblems(subproblem))
-		}
+		// // Validate Apple's ClientIdentifier (Identifier.Value) with device
+		// // identifiers.
+		// //
+		// // Note: We might want to use an external service for this.
+		// if data.UDID != ch.Value && data.SerialNumber != ch.Value {
+		// 	subproblem := NewSubproblemWithIdentifier(
+		// 		ErrorRejectedIdentifierType,
+		// 		Identifier{Type: "permanent-identifier", Value: ch.Value},
+		// 		"challenge identifier %q doesn't match any of the attested hardware identifiers %q", ch.Value, []string{data.UDID, data.SerialNumber},
+		// 	)
+		// 	return storeError(ctx, db, ch, true, NewDetailedError(ErrorBadAttestationStatementType, "permanent identifier does not match").AddSubproblems(subproblem))
+		// }
 
 		// Update attestation key fingerprint to compare against the CSR
 		az.Fingerprint = data.Fingerprint

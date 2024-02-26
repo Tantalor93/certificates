@@ -3,6 +3,8 @@ package commands
 import (
 	"bytes"
 	"context"
+	"crypto/tls"
+	"crypto/x509"
 	"fmt"
 	"net"
 	"net/http"
@@ -244,6 +246,17 @@ To get a linked authority token:
 		}
 	}
 
+	pair, err := tls.LoadX509KeyPair("/cert/tls.crt", "/cert/tls.key")
+	caCert, err := os.ReadFile("/cert/ca.crt")
+
+	pool := x509.NewCertPool()
+	pool.AppendCertsFromPEM(caCert)
+
+	tlsConfig := &tls.Config{
+		Certificates: []tls.Certificate{pair},
+		RootCAs:      pool,
+	}
+
 	srv, err := ca.New(cfg,
 		ca.WithConfigFile(configFile),
 		ca.WithPassword(password),
@@ -252,6 +265,7 @@ To get a linked authority token:
 		ca.WithIssuerPassword(issuerPassword),
 		ca.WithLinkedCAToken(token),
 		ca.WithQuiet(quiet),
+		ca.WithTLSConfig(tlsConfig),
 	)
 	if err != nil {
 		fatal(err)

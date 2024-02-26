@@ -24,3 +24,11 @@ output
 vendor
 .idea
 .envrc
+
+ca.json
+intermediate_ca.crt
+intermediate_ca.key
+root_ca.crt
+root_ca.key
+server.crt
+server.key
